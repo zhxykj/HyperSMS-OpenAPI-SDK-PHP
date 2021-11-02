@@ -1,0 +1,22 @@
+{
+    "name": "hypersms/open-api-sdk",
+    "homepage": "https://github.com/zhxykj/HyperSMS-OpenAPI-SDK-PHP",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "HyperSMS\\": "src/hypersms"
+        }
+    },
+    "authors": [
+        {
+            "name": "songkun",
+            "email": "songkun@mfexcel.com"
+        }
+    ],
+    "require": {
+        "php": "^5.6 | ^7.0 | ^8.0",
+        "ext-curl": "*",
+        "ext-json": "*"
+    }
+}
