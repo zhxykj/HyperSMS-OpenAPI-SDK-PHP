@@ -6,13 +6,13 @@ namespace HyperSMS;
 class HSRequest
 {
     /**
-     * @var string 根Url
+     * @var string gateway url
      */
     private $gateUrl;
 
     /**
      *
-     * @var HSAccount 帐号
+     * @var HSAccount account
      */
     private $account;
 
@@ -43,9 +43,9 @@ class HSRequest
     }
 
     /**
-     * 预处理，加入 token
-     * @param $param array 参数
-     * @param  $with_token string|null 加入token
+     * prepare，add token
+     * @param $param array params
+     * @param  $with_token string|null whether add token
      */
     private function prepare($param, $with_token)
     {
@@ -70,7 +70,7 @@ class HSRequest
                 $signRaw = substr($signRaw, 1);
             }
 
-            printf("sign raw is %s \n", $signRaw);
+            //printf("sign raw is %s \n", $signRaw);
             $param['sign'] = md5($signRaw);
         }
         return str_replace('\\\\/', '\/', json_encode($param, JSON_UNESCAPED_SLASHES));
@@ -78,10 +78,10 @@ class HSRequest
 
     /**
      *
-     * @param  $url string 请求的地址
-     * @param  $param array 参数
+     * @param  $url string request url
+     * @param  $param array params
      * @param  $with_token string|null token
-     * @throws HSException 请求构造出错的时候会返回error
+     * @throws HSException throw error when encounter error
      */
     public function post($url, $param, $with_token = null)
     {
@@ -101,7 +101,7 @@ class HSRequest
             array_push($headers, 'token: ' . $with_token);
         }
 
-        printf("header data : %s, body data: %s \n", json_encode($headers), $data);
+        //printf("header data : %s, body data: %s \n", json_encode($headers), $data);
 
         $ch = null;
         try {

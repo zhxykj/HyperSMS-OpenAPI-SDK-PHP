@@ -81,7 +81,7 @@ class HSSDK
             "appSecret" => $appSecret
         ));
 
-        var_dump($result);
+        //var_dump($result);
         if ($result['code'] === 0) {
             $this->token = $result['data']['token'];
             return $this->token;
