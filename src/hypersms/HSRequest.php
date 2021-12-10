@@ -32,11 +32,12 @@ class HSRequest
     }
 
 
-    private function filerNull (&$arrData){
-        foreach ($arrData as $k => &$v){
-            if($v === null){
+    private function filerNull(&$arrData)
+    {
+        foreach ($arrData as $k => &$v) {
+            if ($v === null) {
                 unset($arrData[$k]);
-            }else if(is_array($v)){
+            } else if (is_array($v)) {
                 $this->filerNull($v);
             }
         }
@@ -102,6 +103,54 @@ class HSRequest
         }
 
         //printf("header data : %s, body data: %s \n", json_encode($headers), $data);
+
+        $ch = null;
+        try {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $this->gateUrl . $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
+            curl_setopt($ch, CURLOPT_USERAGENT, 'HyperSMS OpenAPI PHP Client/1.0');
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            $result = curl_exec($ch);
+            if ($result == false) throw new HSException(HSException::HTTP_REQUEST_ERROR, curl_error($ch));
+        } catch (\Exception $e) {
+            if ($ch) {
+                curl_close($ch);
+            }
+            throw $e;
+        }
+
+        return json_decode($result, true);
+    }
+
+    /**
+     * Post File
+     * @param  $url string request url
+     * @param  $file_path string file path
+     * @param  $with_token string|null token
+     * @throws HSException throw error when encounter error
+     */
+    public function postFile($url, $file_path, $with_token = null)
+    {
+
+        $now = $this->timestamp();
+        $headers = [
+            'appId: ' . $this->account->appId,
+            'timestamp: ' . $now,
+        ];
+
+        if (!empty($with_token)) {
+            array_push($headers, 'token: ' . $with_token);
+        }
+
+        $data = array(
+            'file'=> new \CURLFile($file_path, mime_content_type($file_path), pathinfo($file_path)['basename'])
+        );
+        //printf("header data : %s \n", json_encode($headers));
 
         $ch = null;
         try {

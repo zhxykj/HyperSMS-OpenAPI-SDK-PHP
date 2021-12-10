@@ -103,25 +103,52 @@ class HSSDK
     }
 
     /**
+     *
+     * Paging query product
+     *
+     * @param numeric|null $product_type Product Type
+     * @param string|null $code Brand code
+     * @param int $curr_page Current page number, default value is 1
+     * @param int $page_size The number of items per page, the default value is 10
+     * @return mixed
+     * @throws HSException
+     */
+    public function query_product($product_type = null, $code = null, $curr_page = 1, $page_size = 10)
+    {
+        $this->check_login();
+        return $this->request->post('app/product/item/query', array(
+            "type" => $product_type,
+            "code" => $code,
+            "currPage" => $curr_page,
+            "pageSize" => $page_size
+        ), $this->token);
+    }
+
+    /**
      * New brand
      *
      * New brand information
      *
      * @param $brandname string Brand name
+     * @param string $product_item_code Product Item Code, please refer to the query product interface response
+     * @param numeric $product_type Product Type, 1 HyperSMS 2 SMS,default
      * @param $description string Description
      * @param $certified_url string Certificate URL
      * @return mixed
      * @throws HSException
      */
-    public function add_brandname($brandname, $description = null, $certified_url = null)
+    public function add_brandname($brandname, $product_item_code, $product_type = 2, $description = null, $certified_url = null)
     {
         $this->check_login();
         return $this->request->post('app/brandname/add', array(
             "brandName" => $brandname,
+            "type" => $product_type,
+            "productItemCode" => $product_item_code,
             "description" => $description,
             "certified_url" => $certified_url
         ), $this->token);
     }
+
 
     /**
      *
@@ -129,17 +156,19 @@ class HSSDK
      *
      * @param string|null $brandname Brand name
      * @param string|null $code Brand code
+     * @param numeric $product_type Product Type, 1 HyperSMS 2 SMS,default
      * @param int $curr_page Current page number, default value is 1
      * @param int $page_size The number of items per page, the default value is 10
      * @return mixed
      * @throws HSException
      */
-    public function query_brandname($brandname = null, $code = null, $curr_page = 1, $page_size = 10)
+    public function query_brandname($brandname = null, $code = null,  $product_type = 2, $curr_page = 1, $page_size = 10)
     {
         $this->check_login();
         return $this->request->post('app/brandname/query', array(
             "brandName" => $brandname,
             "code" => $code,
+            "type" => $product_type,
             "currPage" => $curr_page,
             "pageSize" => $page_size
         ), $this->token);
@@ -527,6 +556,81 @@ class HSSDK
             "smsTemplateCode" => $sms_template_code,
             "templateCode" => $template_code,
             "subList" => $sub_list
+        ), $this->token);
+    }
+
+    /**
+     * New material
+     *
+     *  New material
+     *
+     * @param $file string file path
+     * @return mixed
+     * @throws HSException
+     */
+    public function add_material($file)
+    {
+        $this->check_login();
+        return $this->request->postFile('app/material/add', $file, $this->token);
+    }
+
+    /**
+     *  Paging query material
+     *
+     *  Query material data according to specified conditions, support paging
+     *
+     * @param numeric $product_type Product type; default is sms 2, see "Appendix B" for details
+     * @param string|null $material_code material code, refer to add material interface result
+     * @param int $curr_page Current page number, default value is 1
+     * @param int $page_size The number of items per page, the default value is 10
+     * @return mixed
+     * @throws HSException
+     */
+    public function query_material($product_type = 2,
+                                   $material_code = null,
+                                   $curr_page = 1,
+                                   $page_size = 10)
+    {
+        $this->check_login();
+        return $this->request->post('app/material/query', array(
+            "code" => $material_code,
+            "type" => $product_type,
+            "currPage" => $curr_page,
+            "pageSize" => $page_size,
+        ), $this->token);
+    }
+
+    /**
+     * Material Details
+     *
+     * Query event details according to the material code
+     *
+     * @param string $material_code material code, refer to query material interface result
+     * @return mixed
+     * @throws HSException
+     */
+    public function info_material($material_code)
+    {
+        $this->check_login();
+        return $this->request->post('app/material/info', array(
+            "code" => $material_code
+        ), $this->token);
+    }
+
+    /**
+     * Material invalidation
+     *
+     *  Invalidated Material
+     *
+     * @param string $material_code material code, refer to query material interface result
+     * @return mixed
+     * @throws HSException
+     */
+    public function invalid_material($material_code)
+    {
+        $this->check_login();
+        return $this->request->post('app/material/invalid', array(
+            "code" => $material_code
         ), $this->token);
     }
 }

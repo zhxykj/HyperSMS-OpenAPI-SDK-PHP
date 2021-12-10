@@ -28,7 +28,7 @@ function demo_test_login()
         $account);
     try {
         $token = $sdk->login($account->appId, $APP_SECRET);
-        var_dump('testLogin token is' . $token . "\n");
+        var_dump('testLogin token is ' . $token . "\n");
     } catch (HSException $e) {
         var_dump($e);
     }
@@ -46,6 +46,7 @@ function demo_add_brandname()
     try {
         $result = $sdk->add_brandname(
             'HY0002',
+            '',
             "sk send hy 999",
             'http://upload.vn-vtt-test.corporfountain.com/hypersms/20211029/0d337be2b517403fb49d8b5cca43d9f30.jpg?id=2806'
         );
@@ -332,5 +333,84 @@ function demo_invalid_campaign()
 
     }
 }
+
+function demo_query_product(){
+    global $GATEWAY_URL, $account, $token;
+    $sdk = new HSSDK(
+        $GATEWAY_URL,
+        $account,
+        $token);
+
+    try {
+        $result = $sdk->query_product();
+        var_dump($result);
+    } catch (HSException $e) {
+
+    }
+}
+
+
+function demo_add_material(){
+    global $GATEWAY_URL, $account, $token;
+    $sdk = new HSSDK(
+        $GATEWAY_URL,
+        $account,
+        $token);
+
+    try {
+        $result = $sdk->add_material('/home/songkun/Music/test-edit.mp3');
+        echo json_encode($result);
+    } catch (HSException $e) {
+
+    }
+}
+
+
+function demo_query_material(){
+    global $GATEWAY_URL, $account, $token;
+    $sdk = new HSSDK(
+        $GATEWAY_URL,
+        $account,
+        $token);
+
+    try {
+        $result = $sdk->query_material();
+        echo json_encode($result);
+    } catch (HSException $e) {
+
+    }
+}
+
+function demo_info_material(){
+    global $GATEWAY_URL, $account, $token;
+    $sdk = new HSSDK(
+        $GATEWAY_URL,
+        $account,
+        $token);
+
+    try {
+        $result = $sdk->info_material('MA-62k71BLm8l');
+        echo json_encode($result);
+    } catch (HSException $e) {
+
+    }
+}
+
+function demo_invalid_material(){
+    global $GATEWAY_URL, $account, $token;
+    $sdk = new HSSDK(
+        $GATEWAY_URL,
+        $account,
+        $token);
+
+    try {
+        $result = $sdk->invalid_material('MA-62k71BLm8l');
+        echo json_encode($result);
+    } catch (HSException $e) {
+
+    }
+}
+
+demo_query_material();
 
 
